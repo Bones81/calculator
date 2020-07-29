@@ -27,3 +27,6 @@ EXTRA CREDIT: Add a “backspace” button, so the user can undo if they click t
 EXTRA CREDIT: Add keyboard support!
 
 ---Personal Notes---
+Need to keep learning CSS grid. It's perfect for button layout on this project. 
+
+Learn how to incorporate better texture to background colors, like a matte styling for instance.
