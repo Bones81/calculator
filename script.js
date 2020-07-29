@@ -17,3 +17,4 @@
 
 //if divide by 0, display = error msg
 
+//if display.length > however many spaces are available, then {round it to nearest appropriate decimal}

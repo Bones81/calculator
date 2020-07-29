@@ -10,18 +10,20 @@ header {
 }
 #container {
     background-color: darkslategrey;
-    min-width: 303px;
+    min-width: 315px;
     max-width: 350px;
-    min-height: 553px;
+    min-height: 500px;
     margin: 10px auto;
     border-radius: 25px;
-    padding: 50px;
+    padding: 40px;
+    box-shadow: 2px 2px 6px 2px black;
 }
 #branding {
     font-size: 24px;
     padding: 10px;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-style: italic;
+    text-shadow: 1px 1px 3px black;
     color: gray;
     border-bottom: solid 1px black;
 }
@@ -31,23 +33,28 @@ header {
     font-size: 48px;
     text-align: right;
     padding: 0 10px;
+    box-shadow: 1px 1px 3px 1px darkgray;
 }
 #buttons {
-    margin: 5px;
-    padding: 10px 0;
-    
+    width: 90%;
+    margin: 0 auto;
+    padding: 25px 0;
 }
 button {
-    font-size: 56px;
+    font-size: 40px;
     border-radius: 25px;
     min-width: 64px;
+    width: 24%;
+    padding: 10px;
     outline: none;
     cursor: pointer;
-    margin: 3px;
-    box-shadow: 1px 1px 1px 1px gray;
+    box-shadow: 1px 1px 8px 1px black;
+    background-color: rgba(240, 240, 240, 0.8);
+    text-align-last: center;
 }
+/*Change how buttons react when pressed to small translate effect*/
 #all-clear, #equals {
-    width: 128px;
+    width: 48%;
 }
 #all-clear, #backspace {
     background-color: darkslateblue;
@@ -56,8 +63,9 @@ button {
     background-color: rgba(150, 200, 20, 0.8)
 }
 .buttonrow {
-    margin: 5px auto;
-    text-align: justify;
+    min-width: 95%;
+    margin: 5px 0;
+    text-align-last: justify;
 }
 .operation {
     background-color: tan;
