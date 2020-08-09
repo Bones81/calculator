@@ -27,9 +27,14 @@ header {
     color: gray;
     border-bottom: solid 1px black;
 }
+@font-face {
+    font-family: calcfont;
+    src: url(digital-7/digital-7\ \(italic\).ttf);
+}
 #display {
     margin: 10px 0;
     background-color: ghostwhite;
+    font-family: calcfont;
     font-size: 48px;
     text-align: right;
     padding: 0 10px;
