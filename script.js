@@ -1,5 +1,5 @@
 //grab all buttons and display and store in variables
-const btnEquals = document.getElementById('equals');
+const equals = document.getElementById('equals');
 const addBtn = document.getElementById('add');
 const subtractBtn = document.getElementById('subtract');
 const multiplyBtn = document.getElementById('multiply');
@@ -19,14 +19,12 @@ const btn7 = document.getElementById('7');
 const btn8 = document.getElementById('8');
 const btn9 = document.getElementById('9');
 const disp = document.getElementById('display');
-
+disp.textContent = '0';
 //console.log(disp.textContent);
-
-const digits = document.querySelectorAll('.digit-btn');
-const digitsArray = Array.from(digits);
-
-//each number button adds that number to a string in display, 
-//but then that string needs to be converted into a number before any operation runs
+// Initialize operands and operator
+let operand1;
+let operand2;
+let operator;
 
 //all the operations as functions
 function add(a,b) {
@@ -39,6 +37,7 @@ function multiply(a,b) {
     return a*b;
 }
 function divide(a,b) {
+//if divide by 0, display = error msg
     if(b === 0) {
         return 'ERROR';
     } else {
@@ -48,24 +47,95 @@ function divide(a,b) {
 //limit length of result with rounding/length restriction 
 
 //Digit button responses
+const digits = document.querySelectorAll('.digit-btn');
+const digitsArray = Array.from(digits);
+
 for (i=0; i<digitsArray.length; i++) {
     digitsArray[i].addEventListener('click', pressDigit);
 }
 
 function pressDigit(e) {
-    console.log(e);
-    if (disp.textContent === '0') {
+    if (!operandExists) {
+        console.log(e);
+        if (disp.textContent === '0') {
         disp.textContent = '';
-    }    
-    disp.textContent = disp.textContent.concat(`${e.target.textContent}`);
-    console.log(disp.textContent);
-    
+        }    
+        disp.textContent = disp.textContent + e.target.textContent;
+        console.log(disp.textContent);
+    } else {
+        disp.textContent = '';
+        disp.textContent = disp.textContent + e.target.textContent;
+        console.log(operand1, operator, disp.textContent);
+    }
+}
+//but then that string needs to be converted into a number before any operation runs
+
+//operator/equals button responses
+const operators = document.querySelectorAll('.operator');
+const opsArray = Array.from(operators);
+console.log(opsArray);
+
+let operandExists = false;
+let operationComplete = false;
+
+for (i=0; i<opsArray.length; i++) {
+    opsArray[i].addEventListener('click', pressOperator);
+}
+function pressOperator(e) {
+    //what happens when you press an operator button to start an expression
+    if (operator === undefined) {
+        operand1 = disp.textContent;
+        operandExists = true;
+        operator = e.target.textContent;
+        console.log(operand1, operator); 
+    //what happens if you've already pressed an operator button without completing the expression or clearing the screen 
+    } else {
+        operand2 = disp.textContent;
+        resolve(operand1, operand2);
+        //eval expression and set operand1 = resulting disp.textContent
+        //then set operator = e.target.textContent
+        //set operand1 to disp.textContent and run existing operator on same operand2 as before
+
+    }
 }
 
+equals.addEventListener('click', resolve);
 
-//how to update the display
-
-
+function resolve() {
+    let a = Number(operand1);
+    let b = Number(operand2);
+    console.log(disp.textContent);
+    if(operandExists) {
+        operand2 = disp.textContent;
+    } else {
+        console.log('need 2nd operand');
+    }
+    let res;
+    switch(operator) {
+        case '+': 
+            res = a+b;
+            console.log(res);
+            break;
+        case '-':
+            res = a-b;
+            break;
+        case '*':
+            res = a*b;
+            break;
+        case '/':
+            if (b===0) {
+                res = "ERROR, div by 0";
+                break;
+            } else {
+                res = a/b;
+                break;
+            }
+        default:
+            return;            
+    } 
+    disp.textContent = res;
+}
+//how to remove commas from display 
 function convertDisplay() {
     commasRmvd = Number(disp.textContent.replace(/,/g,''));
     return commasRmvd;
@@ -96,13 +166,13 @@ function fullClear() {
     disp.textContent = '0';
     operand1 = '';
     operand2 = '';
-    operator = '';
+    operator = undefined;
     console.log(disp.textContent);
 }
 
-//pressing equals button multiple times repeats last operator and operand
+//pressing equals button applies appropriate function to operands
 
-//if divide by 0, display = error msg
+//pressing equals button multiple times repeats last operator and operand2 on newly assigned operand1
 
 //if display.length > however many spaces are available, then {round it to nearest appropriate decimal}
 
@@ -126,7 +196,7 @@ Next, '7':
     Store '7' as operand2.
 
 Next, '=':
-    
+
     switch case (operator === 'add')
         Add function should be run with operand1 ('2') and operand2 ('7') as arguments.
         function should return 9.
