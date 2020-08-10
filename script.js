@@ -5,7 +5,7 @@ const subtractBtn = document.getElementById('subtract');
 const multiplyBtn = document.getElementById('multiply');
 const divideBtn = document.getElementById('divide');
 const decimalBtn = document.getElementById('decimal');
-const clearBtn = document.getElementById('backspace');
+const clearBtn = document.getElementById('clear');
 const allClearBtn = document.getElementById('all-clear');
 
 const btn0 = document.getElementById('0');
@@ -20,11 +20,15 @@ const btn8 = document.getElementById('8');
 const btn9 = document.getElementById('9');
 const disp = document.getElementById('display');
 disp.textContent = '0';
-//console.log(disp.textContent);
+console.log(disp.textContent);
 // Initialize operands and operator
 let operand1;
 let operand2;
 let operator;
+let operand1Set = false;
+let operand2Set = false;
+let operand2Begun = false;
+let operationComplete = false;
 
 //all the operations as functions
 function add(a,b) {
@@ -39,7 +43,7 @@ function multiply(a,b) {
 function divide(a,b) {
 //if divide by 0, display = error msg
     if(b === 0) {
-        return 'ERROR';
+        return 'ERROR, DIV BY 0';
     } else {
         return a/b; 
     }
@@ -55,17 +59,26 @@ for (i=0; i<digitsArray.length; i++) {
 }
 
 function pressDigit(e) {
-    if (!operandExists) {
-        console.log(e);
-        if (disp.textContent === '0') {
-        disp.textContent = '';
-        }    
-        disp.textContent = disp.textContent + e.target.textContent;
-        console.log(disp.textContent);
-    } else {
-        disp.textContent = '';
-        disp.textContent = disp.textContent + e.target.textContent;
-        console.log(operand1, operator, disp.textContent);
+    switch(true) {
+        case !operand1Set && disp.textContent === '0' || disp.textContent === 'NaN' || disp.textContent === 'ERROR, DIV BY 0':
+            disp.textContent = e.target.textContent;
+            console.log(disp.textContent);
+            break;
+        case !operand1Set && disp.textContent !== '0':
+            disp.textContent += e.target.textContent;
+            console.log(disp.textContent);
+            break;
+        case operand1Set && !operand2Begun:
+            disp.textContent = e.target.textContent;    
+            operand2Begun = true;
+            console.log(operand1, operator, disp.textContent, operand2Begun);
+            break;
+        case operand1Set && operand2Begun:
+            disp.textContent += e.target.textContent;    
+            console.log(operand1, operator, disp.textContent, operand2Begun);
+            break;
+        default: 
+            return;    
     }
 }
 //but then that string needs to be converted into a number before any operation runs
@@ -73,25 +86,26 @@ function pressDigit(e) {
 //operator/equals button responses
 const operators = document.querySelectorAll('.operator');
 const opsArray = Array.from(operators);
-console.log(opsArray);
+//console.log(opsArray);
 
-let operandExists = false;
-let operationComplete = false;
 
 for (i=0; i<opsArray.length; i++) {
     opsArray[i].addEventListener('click', pressOperator);
 }
 function pressOperator(e) {
     //what happens when you press an operator button to start an expression
+    console.log(operator);
     if (operator === undefined) {
         operand1 = disp.textContent;
-        operandExists = true;
+        operand1Set = true;
         operator = e.target.textContent;
         console.log(operand1, operator); 
     //what happens if you've already pressed an operator button without completing the expression or clearing the screen 
     } else {
         operand2 = disp.textContent;
         resolve(operand1, operand2);
+        operand1 = disp.textContent;
+        operator = e.target.textContent;
         //eval expression and set operand1 = resulting disp.textContent
         //then set operator = e.target.textContent
         //set operand1 to disp.textContent and run existing operator on same operand2 as before
@@ -101,45 +115,53 @@ function pressOperator(e) {
 
 equals.addEventListener('click', resolve);
 
-function resolve() {
+function resolve(e) {
+    let res;
+    if(operand1Set && !operand2Set) {
+        operand2 = Number(disp.textContent);
+        operand2Set = true;
+        console.log(operand2);
+    } else if (!operand1Set) {
+        return;
+    }
+    
     let a = Number(operand1);
     let b = Number(operand2);
-    console.log(disp.textContent);
-    if(operandExists) {
-        operand2 = disp.textContent;
-    } else {
-        console.log('need 2nd operand');
-    }
-    let res;
     switch(operator) {
         case '+': 
-            res = a+b;
+            res = add(a,b);
             console.log(res);
             break;
         case '-':
-            res = a-b;
+            res = subtract(a,b);
+            console.log(res);
             break;
         case '*':
-            res = a*b;
+            res = multiply(a,b);
+            console.log(res);
             break;
         case '/':
-            if (b===0) {
-                res = "ERROR, div by 0";
-                break;
-            } else {
-                res = a/b;
-                break;
-            }
+            res = divide(a,b);
+            console.log(res);
+            break;
         default:
             return;            
     } 
+    //console.log(res);
     disp.textContent = res;
+    if (!operationComplete) {
+        operationComplete = true;
+        console.log(operand1, operand2, operator);
+    } 
+    operand1 = res;
+    console.log(operand1, operand2, operator);
+
 }
-//how to remove commas from display 
-function convertDisplay() {
-    commasRmvd = Number(disp.textContent.replace(/,/g,''));
-    return commasRmvd;
-}
+// //how to remove commas from display 
+// function convertDisplay() {
+//     commasRmvd = Number(disp.textContent.replace(/,/g,''));
+//     return commasRmvd;
+// }
 
 //how to chain operations
 
@@ -151,13 +173,11 @@ function placeDecimal() {
     }
     console.log(disp.textContent);
 }
-//backspace function on 'C' key
-clearBtn.addEventListener('click', backspace);
-function backspace() {
-    disp.textContent = disp.textContent.slice(0, -1);
-    if (disp.textContent === "") {
-        disp.textContent = '0';
-    }
+//simpleClear function on 'C' key
+clearBtn.addEventListener('click', simpleClear);
+function simpleClear() {
+    disp.textContent = 0;
+    console.log(operand1, operator, operand2, operand1Set, operationComplete);
     console.log(disp.textContent);
 }
 //full clear on AC button
@@ -167,6 +187,10 @@ function fullClear() {
     operand1 = '';
     operand2 = '';
     operator = undefined;
+    operand1Set = false;
+    operand2Set = false;
+    operand2Begun = false;
+    operationComplete = false;
     console.log(disp.textContent);
 }
 
