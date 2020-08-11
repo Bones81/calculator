@@ -60,7 +60,13 @@ for (i=0; i<digitsArray.length; i++) {
 
 function pressDigit(e) {
     switch(true) {
-        case !operand1Set && disp.textContent === '0' || disp.textContent === 'NaN' || disp.textContent === 'ERROR, DIV BY 0':
+        case operand1Set && disp.textContent === 'NaN' || disp.textContent === 'ERROR, DIV BY 0' || operationComplete:
+            operationComplete = false;
+            operand1Set = false;
+            disp.textContent = e.target.textContent;
+            console.log(disp.textContent, operand1, operand2, operand1Set, operand2Set, operationComplete);
+            break;
+        case !operand1Set && disp.textContent === '0':
             disp.textContent = e.target.textContent;
             console.log(disp.textContent);
             break;
@@ -120,11 +126,14 @@ function resolve(e) {
     if(operand1Set && !operand2Set) {
         operand2 = Number(disp.textContent);
         operand2Set = true;
-        console.log(operand2);
-    } else if (!operand1Set) {
+        console.log('op1:' + operand1 +', op2:' + operand2);
+    } else if (!operand1Set && operand2Set) {
+        operand1 = Number(disp.textContent);
+        operand1Set = true;
+        console.log(operand1, operand2, operator)
+    } else if (!operand1Set && !operand2Set) {
         return;
     }
-    
     let a = Number(operand1);
     let b = Number(operand2);
     switch(operator) {
@@ -147,14 +156,13 @@ function resolve(e) {
         default:
             return;            
     } 
-    //console.log(res);
     disp.textContent = res;
     if (!operationComplete) {
         operationComplete = true;
         console.log(operand1, operand2, operator);
     } 
     operand1 = res;
-    console.log(operand1, operand2, operator);
+    console.log(`op1: ${operand1}, op2: ${operand2}, operator: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
 
 }
 // //how to remove commas from display 
@@ -177,6 +185,7 @@ function placeDecimal() {
 clearBtn.addEventListener('click', simpleClear);
 function simpleClear() {
     disp.textContent = 0;
+    operand1 = 0;
     console.log(operand1, operator, operand2, operand1Set, operationComplete);
     console.log(disp.textContent);
 }
