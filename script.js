@@ -107,17 +107,25 @@ function pressOperator(e) {
         operand1Set = true;
         operator = e.target.textContent;
         console.log(`op1: ${operand1}, op2: ${operand2}, operator: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
-    
+    //this is what happens when you press an operator after pressing the equals button
     } else if (operationComplete) {
         operationComplete = false;
+        operand2Set = false;
+        operand2Begun = false;
         operator = e.target.textContent;
-        operand1 = disp.textContent;
         console.log(`op1: ${operand1}, op2: ${operand2}, operator: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
-    //what happens if you've already pressed an operator button and reassigned operand2 without completing the expression or clearing the screen 
+
+    } else if (operator !== undefined) {
+        operator = e.target.textContent;
+        operand2Begun = false;
+        console.log(`op1: ${operand1}, op2: ${operand2}, operator: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
+
+    } else if (operator !== undefined && !operationComplete) {
+        
     } else {
         operand2 = disp.textContent;
         console.log(`op1: ${operand1}, op2: ${operand2}, operator: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
-        resolve(operand1, operand2);
+        operate(operand1, operand2);
         //operand1 = disp.textContent;
         operator = e.target.textContent;
         console.log(`op1: ${operand1}, op2: ${operand2}, operator: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
@@ -128,9 +136,9 @@ function pressOperator(e) {
     }
 }
 
-equals.addEventListener('click', resolve);
+equals.addEventListener('click', operate);
 
-function resolve(e) {
+function operate(e) {
     let res;
     if(operand1Set && !operand2Set) {
         operand2 = Number(disp.textContent);
@@ -191,6 +199,11 @@ function resolve(e) {
 //when to enable/disable decimal button function
 decimalBtn.addEventListener('click', placeDecimal);
 function placeDecimal() {
+    if (operationComplete) {
+        operationComplete = false;
+        operand1Set = false;
+        disp.textContent = 0;
+    }
     if(disp.textContent.indexOf('.') === -1) {
         disp.textContent = disp.textContent.concat('.');    
     }
@@ -201,7 +214,7 @@ clearBtn.addEventListener('click', simpleClear);
 function simpleClear() {
     disp.textContent = 0;
     operand1 = 0;
-    console.log(operand1, operator, operand2, operand1Set, operationComplete);
+    console.log(`op1: ${operand1}, op2: ${operand2}, operator: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
 }
 //full clear on AC button
 allClearBtn.addEventListener('click', fullClear);

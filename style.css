@@ -57,6 +57,10 @@ button {
     background-color: rgba(240, 240, 240, 0.8);
     text-align-last: center;
 }
+button:hover {
+    transform: scale(1.1);
+    border-color: seashell;
+}
 /*Change how buttons react when pressed to small translate effect*/
 #all-clear, #equals {
     width: 48%;
