@@ -20,7 +20,8 @@ const btn8 = document.getElementById('8');
 const btn9 = document.getElementById('9');
 const disp = document.getElementById('display');
 disp.textContent = '0';
-console.log(disp.textContent);
+const maxDispLength = 16;
+
 // Initialize operands and operator
 let operand1;
 let operand2;
@@ -87,31 +88,39 @@ function pressDigit(e) {
             return;    
     }
 }
-//but then that string needs to be converted into a number before any operation runs
-
+//how to ensure disp length is not exceeded
+function fixLength(num) {
+    const fixed = Number(num.toString().slice(0,13));
+    return fixed;
+}
 //operator/equals button responses
 const operators = document.querySelectorAll('.operator');
 const opsArray = Array.from(operators);
-//console.log(opsArray);
-
-
 for (i=0; i<opsArray.length; i++) {
     opsArray[i].addEventListener('click', pressOperator);
 }
 function pressOperator(e) {
     //what happens when you press an operator button to start an expression
     console.log(operator);
-    if (operator === undefined) {
+    if (operator === undefined)  {
         operand1 = disp.textContent;
         operand1Set = true;
         operator = e.target.textContent;
-        console.log(operand1, operator); 
-    //what happens if you've already pressed an operator button without completing the expression or clearing the screen 
+        console.log(`op1: ${operand1}, op2: ${operand2}, operator: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
+    
+    } else if (operationComplete) {
+        operationComplete = false;
+        operator = e.target.textContent;
+        operand1 = disp.textContent;
+        console.log(`op1: ${operand1}, op2: ${operand2}, operator: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
+    //what happens if you've already pressed an operator button and reassigned operand2 without completing the expression or clearing the screen 
     } else {
         operand2 = disp.textContent;
+        console.log(`op1: ${operand1}, op2: ${operand2}, operator: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
         resolve(operand1, operand2);
-        operand1 = disp.textContent;
+        //operand1 = disp.textContent;
         operator = e.target.textContent;
+        console.log(`op1: ${operand1}, op2: ${operand2}, operator: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
         //eval expression and set operand1 = resulting disp.textContent
         //then set operator = e.target.textContent
         //set operand1 to disp.textContent and run existing operator on same operand2 as before
@@ -132,6 +141,7 @@ function resolve(e) {
         operand1Set = true;
         console.log(operand1, operand2, operator)
     } else if (!operand1Set && !operand2Set) {
+        operationComplete = true;
         return;
     }
     let a = Number(operand1);
@@ -155,7 +165,12 @@ function resolve(e) {
             break;
         default:
             return;            
-    } 
+    }
+    if (res.toString().length > maxDispLength && res.toString().indexOf('.') !== -1) {
+        res = fixLength(res);
+    }
+    
+
     disp.textContent = res;
     if (!operationComplete) {
         operationComplete = true;
@@ -187,7 +202,6 @@ function simpleClear() {
     disp.textContent = 0;
     operand1 = 0;
     console.log(operand1, operator, operand2, operand1Set, operationComplete);
-    console.log(disp.textContent);
 }
 //full clear on AC button
 allClearBtn.addEventListener('click', fullClear);

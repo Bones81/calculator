@@ -29,7 +29,7 @@ header {
 }
 @font-face {
     font-family: calcfont;
-    src: url(digital-7/digital-7\ \(italic\).ttf);
+    src: url(digital-7/digital-7\ \(mono\ italic\).ttf);
 }
 #display {
     margin: 10px 0;
