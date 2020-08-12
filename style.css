@@ -61,8 +61,11 @@ button:hover {
     transform: scale(1.1);
     border-color: seashell;
 }
+.digit-btn {
+    background-color: rgb(165, 201, 171);
+}
 /*Change how buttons react when pressed to small translate effect*/
-#all-clear, #equals {
+#all-clear{
     width: 48%;
 }
 #all-clear, #backspace {
