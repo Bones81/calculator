@@ -38,7 +38,7 @@ header {
     font-size: 48px;
     text-align: right;
     padding: 0 10px;
-    box-shadow: 1px 1px 3px 1px darkgray;
+    box-shadow: 1px 1px 5px 1px darkgray, -1px -1px 5px 1px darkgray;
 }
 #buttons {
     width: 90%;
@@ -60,6 +60,9 @@ button {
 button:hover {
     transform: scale(1.1);
     border-color: seashell;
+}
+button:active {
+    transform: translateY(4px);
 }
 .digit-btn {
     background-color: rgb(165, 201, 171);

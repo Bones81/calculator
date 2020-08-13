@@ -94,20 +94,6 @@ function pressDigit(e) {
     }
 }
 
-//keyboard functionality
-//if digit keyboard key pressed, act as though the same digit button was clicked
-//if operator keyboard key pressed, act as though the same operator was clicked
-//if Esc pressed, run allClear
-//if delete pressed, run simpleClear
-//if return or equals button pressed, act as though equals button clicked
-//same with period key and decimal button
-equals.addEventListener("keyup", function(e) {
-    console.log(e);
-    // if (e.keyCode === 13) {
-    // //  e.preventDefault();
-    // equals.click();
-    // }
-  });
 
 polarityBtn.addEventListener('click', revPolarity);
 function revPolarity(e) {
@@ -116,153 +102,153 @@ function revPolarity(e) {
     } else {
         disp.textContent = 0 - disp.textContent;
         console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
-
+        
     }
     //Change operand1 or operand2 to be the modified disp.textContent, depending on which one was changed by reversing polarity
     if (operand1Set) {
         operand2 = disp.textContent;
         operand2Set = false;
         console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
-
+        
     }
 }
 //how to ensure disp length is not exceeded
 // function fixLength(num) {
-//     const fixed = Number(num.toString().slice(0,maxDispLength));
-//     return fixed;
-// }
-//operator/equals button responses
-const operators = document.querySelectorAll('.operator');
-const opsArray = Array.from(operators);
-for (i=0; i<opsArray.length; i++) {
-    opsArray[i].addEventListener('click', pressOperator);
-}
-function pressOperator(e) {
-    //what happens when you press an operator button to start an expression
-    if (operator === undefined)  {
-        operand1 = disp.textContent;
-        operand1Set = true;
-        operator = e.target.textContent;
-        console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
-    //this is what happens when you press an operator after pressing the equals button
-    } else if (operationComplete) {
-        operationComplete = false;
-        operand2Begun = false;
-        operand2Set = false;
-        operator = e.target.textContent;
-        console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
-
-    }  else if (operator !== undefined && !operationComplete && operand2Set === true) {
-        operand2Begun = false;
-        operand2Set = false;
-        operate(operand1, operand2);
-        operator = e.target.textContent;
-        console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
+    //     const fixed = Number(num.toString().slice(0,maxDispLength));
+    //     return fixed;
+    // }
+    //operator/equals button responses
+    const operators = document.querySelectorAll('.operator');
+    const opsArray = Array.from(operators);
+    for (i=0; i<opsArray.length; i++) {
+        opsArray[i].addEventListener('click', pressOperator);
+    }
+    function pressOperator(e) {
+        //what happens when you press an operator button to start an expression
+        if (operator === undefined)  {
+            operand1 = disp.textContent;
+            operand1Set = true;
+            operator = e.target.textContent;
+            console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
+            //this is what happens when you press an operator after pressing the equals button
+        } else if (operationComplete) {
+            operationComplete = false;
+            operand2Begun = false;
+            operand2Set = false;
+            operator = e.target.textContent;
+            console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
+            
+        }  else if (operator !== undefined && !operationComplete && operand2Set === true) {
+            operand2Begun = false;
+            operand2Set = false;
+            operate(operand1, operand2);
+            operator = e.target.textContent;
+            console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
+            
+        } else if (operator !== undefined && !operationComplete && operand2Set === false) {
+            operand2 = disp.textContent;
+            operand2Begun = true;
+            operand2Set = true;
+            operate(operand1, operand2);
+            operator = e.target.textContent;
+            operand2Begun = false;
+            operand2Set = false;
+            console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
+            
+        } else if (operator !== undefined && operationComplete) {
+            operator = e.target.textContent;
+            operand2Begun = false;
+            console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
+            
+        } else {
+            console.log('THIS SCENARIO NEEDS ATTENTION');
+            operand2 = disp.textContent;
+            console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
+            operate(operand1, operand2);
+            //operand1 = disp.textContent;
+            operator = e.target.textContent;
+            console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
+            //eval expression and set operand1 = resulting disp.textContent
+            //then set operator = e.target.textContent
+            //set operand1 to disp.textContent and run existing operator on same operand2 as before
+            
+        }
+    }
     
-    } else if (operator !== undefined && !operationComplete && operand2Set === false) {
-        operand2 = disp.textContent;
-        operand2Begun = true;
-        operand2Set = true;
-        operate(operand1, operand2);
-        operator = e.target.textContent;
-        operand2Begun = false;
-        operand2Set = false;
-        console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
-
-    } else if (operator !== undefined && operationComplete) {
-        operator = e.target.textContent;
-        operand2Begun = false;
-        console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
-
-    } else {
-        console.log('THIS SCENARIO NEEDS ATTENTION');
-        operand2 = disp.textContent;
-        console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
-        operate(operand1, operand2);
-        //operand1 = disp.textContent;
-        operator = e.target.textContent;
-        console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
-        //eval expression and set operand1 = resulting disp.textContent
-        //then set operator = e.target.textContent
-        //set operand1 to disp.textContent and run existing operator on same operand2 as before
-
+    equals.addEventListener('click', operate);
+    equals.addEventListener('click', completeOperation);
+    function completeOperation(e) {
+        if (!operationComplete) {
+            operationComplete = true;
+            console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
+        } 
     }
-}
-
-equals.addEventListener('click', operate);
-equals.addEventListener('click', completeOperation);
-function completeOperation(e) {
-    if (!operationComplete) {
-        operationComplete = true;
-        console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
-    } 
-}
-
-
-function operate(e) {
-    let res;
-    if (operand1Set && !operand2Set) {
-        operand2 = Number(disp.textContent);
-        operand2Set = true;
-        console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
-    } else if (!operand1Set && operand2Set) {
-        operand1 = Number(disp.textContent);
-        operand1Set = true;
-        console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
-    } else if (!operand1Set && !operand2Set) {
-        operationComplete = true;
-        console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
-        return;
-    }
-    let a = Number(operand1);
-    let b = Number(operand2);
-    switch(operator) {
-        case '+': 
+    
+    
+    function operate(e) {
+        let res;
+        if (operand1Set && !operand2Set) {
+            operand2 = Number(disp.textContent);
+            operand2Set = true;
+            console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
+        } else if (!operand1Set && operand2Set) {
+            operand1 = Number(disp.textContent);
+            operand1Set = true;
+            console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
+        } else if (!operand1Set && !operand2Set) {
+            operationComplete = true;
+            console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
+            return;
+        }
+        let a = Number(operand1);
+        let b = Number(operand2);
+        switch(operator) {
+            case '+': 
             res = add(a,b);
             console.log(res);
             break;
-        case '-':
-            res = subtract(a,b);
-            console.log(res);
-            break;
-        case '*':
-            res = multiply(a,b);
-            console.log(res);
-            break;
-        case '/':
-            res = divide(a,b);
-            console.log(res);
-            break;
-        default:
-            return;            
-    }
-    //if result is too long AND has a decimal AND is NOT scientific notation
-    if (res.toString().length > maxDispLength && res.toString().indexOf('.') !== -1 && 
-        res.toString().indexOf('e') === -1) {
-            const separatedRes = res.toString().split('.');
-            const numB4Dec = separatedRes[0];
-            const desiredDigAftDec = maxDispLength - (numB4Dec.length + 1); //the +1 accounts for the decimal
-            if (desiredDigAftDec < 0) {
-                res = res.toExponential(8);
-            } else {
-                res = +res.toFixed(desiredDigAftDec);
-            }
-            //res = fixLength(res);
-    //result is too long and IS scientific notation
-    //means we need to shorten the length of res but keep everything from the e to the end of res
-    //so, we need to res.toString(), excise a number of digits before e (splice?), round or do precision method, (and?) join the two fragments of the stringified res
-    } else if (res.toString().length > maxDispLength && 
-    res.toString().indexOf('e') !== -1) {
-        res = res.toExponential(8);
-    }
-    if (res.toString().length > maxDispLength && res >= (1*(10**maxDispLength)-1) || res <= -(1*10**(maxDispLength - 1)+1)) {
-            //convert res to sci notation
-            res = res.toExponential(8);
-            console.log('res = ' + res)
+            case '-':
+                res = subtract(a,b);
+                console.log(res);
+                break;
+                case '*':
+                    res = multiply(a,b);
+                    console.log(res);
+                    break;
+                    case '/':
+                        res = divide(a,b);
+                        console.log(res);
+                        break;
+                        default:
+                            return;            
+                        }
+                        //if result is too long AND has a decimal AND is NOT scientific notation
+                        if (res.toString().length > maxDispLength && res.toString().indexOf('.') !== -1 && 
+                        res.toString().indexOf('e') === -1) {
+                            const separatedRes = res.toString().split('.');
+                            const numB4Dec = separatedRes[0];
+                            const desiredDigAftDec = maxDispLength - (numB4Dec.length + 1); //the +1 accounts for the decimal
+                            if (desiredDigAftDec < 0) {
+                                res = res.toExponential(8);
+                            } else {
+                                res = +res.toFixed(desiredDigAftDec);
+                            }
+                            //res = fixLength(res);
+                            //result is too long and IS scientific notation
+                            //means we need to shorten the length of res but keep everything from the e to the end of res
+                            //so, we need to res.toString(), excise a number of digits before e (splice?), round or do precision method, (and?) join the two fragments of the stringified res
+                        } else if (res.toString().length > maxDispLength && 
+                        res.toString().indexOf('e') !== -1) {
+                            res = res.toExponential(8);
+                        }
+                        if (res.toString().length > maxDispLength && res >= (1*(10**maxDispLength)-1) || res <= -(1*10**(maxDispLength - 1)+1)) {
+                            //convert res to sci notation
+                            res = res.toExponential(8);
+                            console.log('res = ' + res)
         }
-    disp.textContent = res;
-    operand1 = res;
-    console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
+        disp.textContent = res;
+        operand1 = res;
+        console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
 }
 // //how to remove commas from display 
 // function convertDisplay() {
@@ -295,7 +281,7 @@ function placeDecimal() {
     }
     console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
 }
-//simpleClear function on 'C' key
+//simpleClear function on 'c' or 'Backspace' key
 clearBtn.addEventListener('click', simpleClear);
 function simpleClear() {
     disp.textContent = 0;
@@ -319,6 +305,73 @@ function fullClear() {
     console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
 }
 
+document.onkeyup = function(e) {
+    console.log(e);
+    switch(e.key) {
+        case 'Enter':
+        case '=':    
+            equals.click();
+            break;
+        case '+':
+            addBtn.click();
+            break;
+        case '-':
+            subtractBtn.click();
+            break;
+        case '*':
+            multiplyBtn.click();
+            break;
+        case '/':
+            divideBtn.click();
+            break;
+        case '0':
+            btn0.click();
+            break;
+        case '1':
+            btn1.click();
+            break;  
+        case '2':
+            btn2.click();
+            break;
+        case '3':
+            btn3.click();
+            break;                      
+        case '4':
+            btn4.click();
+            break;
+        case '5':
+            btn5.click();
+            break; 
+        case '6':
+            btn6.click();
+            break;
+        case '7':
+            btn7.click();
+            break;
+        case '8':
+            btn8.click();
+            break;
+        case '9':
+            btn9.click();
+            break;                         
+        case 'Backspace':
+        case 'c':
+            clearBtn.click();
+            break;
+        case 'Escape':
+        case 'a':
+            allClearBtn.click();
+            break;
+        case '.':
+            decimalBtn.click();
+            break;
+        case '~':
+            polarityBtn.click();
+            break;        
+        default:
+            return;    
+    }
+  };
 
 //if display.length > however many spaces are available, then {round it to nearest appropriate decimal}
 
