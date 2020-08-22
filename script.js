@@ -66,20 +66,16 @@ function pressDigit(e) {
             operationComplete = false;
             operand1Set = false;
             disp.textContent = e.target.textContent;
-            console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
-            break;
+            break;  
         case !operand1Set && disp.textContent === '0':
             disp.textContent = e.target.textContent;
-            console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
             break;
         case !operand1Set && disp.textContent !== '0':
             disp.textContent += e.target.textContent;
-            console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
             break;
         case operand1Set && !operand2Begun:
             disp.textContent = e.target.textContent;    
             operand2Begun = true;
-            console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
             break;
         case operand1Set && operand2Begun:
             if (disp.textContent.length >= maxDispLength) {
@@ -87,29 +83,12 @@ function pressDigit(e) {
             } else {
                 disp.textContent += e.target.textContent;    
             }
-            console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
             break;
         default: 
             return;    
     }
 }
-polarityBtn.addEventListener('click', revPolarity);
-function revPolarity(e) {
-    if (disp.textContent.indexOf('e') !== -1) {
-        disp.textContent = Number(0 - disp.textContent).toExponential();
-    } else {
-        disp.textContent = 0 - disp.textContent;
-        console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
-        
-    }
-    //Change operand1 or operand2 to be the modified disp.textContent, depending on which one was changed by reversing polarity
-    if (operand1Set) {
-        operand2 = disp.textContent;
-        operand2Set = false;
-        console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
-        
-    }
-}
+
 //how to ensure disp length is not exceeded
 // function fixLength(num) {
     //     const fixed = Number(num.toString().slice(0,maxDispLength));
@@ -127,24 +106,32 @@ function pressOperator(e) {
         operand1 = disp.textContent;
         operand1Set = true;
         operator = e.target.textContent;
-    
     } else if (operator !== undefined && !operationComplete && !operand2Begun) {
     //what happens when you press an operator immediately after pressing an operator (hitting plus twice or hitting plus when you meant minus)
         operator = e.target.textContent;
-        
-    } else if (operator !== undefined && !operationComplete && operand2Begun) {
-    //what happens when you have typed in a number, an operator, and another number then press this operator without having pressed equals. Chaining of operations    
-        operand2 = disp.textContent;
-        operand2Set = true;
-        operate(operand1, operand2);
-        operator = e.target.textContent;
-        operand2Begun = false
-
-    } else if (operator !== undefined && operationComplete) {
-    //what happens when you press an operator immediately after pressing equals    
+    } else if (operator !== undefined && !operationComplete && !operand1Set 
+        && operand2Begun) {
+      
+        operand1 = disp.textContent;
+        operand1Set = true;
         operator = e.target.textContent;
         operand2Begun = false;
-        
+        operand2Set = false;
+
+    } else if (operator !== undefined && !operationComplete && operand1Set 
+        && operand2Begun) {
+        //what happens when you have typed in a number, an operator, and another number then press another operator. Chaining of operations.  
+            operand2 = disp.textContent;
+            operand2Set = true;
+            operate(operand1, operand2);
+            operand2Begun = false;
+            operand2Set = false;
+    } else if (operator !== undefined && operationComplete) {
+    //what happens when you press an operator immediately after pressing equals    
+        operationComplete = false;
+        operator = e.target.textContent;
+        operand2Begun = false;
+        operand2Set = false;
     } else if (operationComplete) {
         operationComplete = false;
         operand2Begun = false;
@@ -218,14 +205,27 @@ function operate(e) {
     }
     disp.textContent = res;
     operand1 = res;
-    console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
 }
+
 equals.addEventListener('click', completeOperation);
 function completeOperation(e) {
     if (!operationComplete) {
         operationComplete = true;
-        console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
     } 
+}
+
+polarityBtn.addEventListener('click', revPolarity);
+function revPolarity(e) {
+    if (disp.textContent.indexOf('e') !== -1) {
+        disp.textContent = Number(0 - disp.textContent).toExponential();
+    } else {
+        disp.textContent = 0 - disp.textContent;        
+    }
+    //Change operand1 or operand2 to be the modified disp.textContent, depending on which one was changed by reversing polarity
+    if (operand1Set) {
+        operand2 = disp.textContent;
+        operand2Set = false;        
+    }
 }
 
 decimalBtn.addEventListener('click', placeDecimal);
@@ -234,7 +234,11 @@ function placeDecimal() {
         operationComplete = false;
         operand1Set = false;
         disp.textContent = 0;
-    } else if (!operand2Set && operand2Begun) {
+    } else if (operand1Set && !operand2Begun) {
+        disp.textContent = 0;
+        disp.textContent = disp.textContent.concat('.'); 
+        operand2Begun = true;
+    } else if (operand2Begun && !operand2Set) {
         if (disp.textContent.indexOf('.') === -1) {
             disp.textContent = disp.textContent.concat('.'); 
         }
@@ -248,7 +252,6 @@ function placeDecimal() {
     if (disp.textContent.indexOf('.') === -1) {
         disp.textContent = disp.textContent.concat('.');    
     }
-    console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
 }
 
 clearBtn.addEventListener('click', simpleClear);
@@ -258,7 +261,6 @@ function simpleClear() {
         operand2Begun = false;
     }
     //operand1 = 0;
-    console.log(`op1: ${operand1}, op2: ${operand2}, op: ${operator}, op1Set?: ${operand1Set}, op2Set? ${operand2Set}, op2Begun: ${operand2Begun}, opComplete?: ${operationComplete}`);
 }
 
 allClearBtn.addEventListener('click', fullClear);

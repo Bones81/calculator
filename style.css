@@ -59,7 +59,7 @@ button {
 }
 button:hover {
     transform: scale(1.1);
-    border-color: seashell;
+    border-color: darkgray;
 }
 button:active {
     transform: translateY(4px);
