@@ -139,14 +139,6 @@ function pressOperator(e) {
         operator = e.target.textContent;
     } else {
         console.log('THIS SCENARIO NEEDS ATTENTION');
-        // operand2 = disp.textContent;
-        // operate(operand1, operand2);
-        //operand1 = disp.textContent;
-        // operator = e.target.textContent;
-        //eval expression and set operand1 = resulting disp.textContent
-        //then set operator = e.target.textContent
-        //set operand1 to disp.textContent and run existing operator on same operand2 as before
-        
     }
 }
 
@@ -246,7 +238,6 @@ function placeDecimal() {
     if (operator !== undefined && !operand2Begun) {
         disp.textContent = 0;
         disp.textContent = disp.textContent.concat('.'); 
-        operand2Set = false;
         operand2Begun = true;
     }
     if (disp.textContent.indexOf('.') === -1) {
@@ -279,7 +270,8 @@ document.onkeyup = function(e) {
     console.log(e);
     switch(e.key) {
         case 'Enter':
-        case '=':    
+        case '=':  
+            e.preventDefault();
             equals.click();
             break;
         case '+':
@@ -326,10 +318,12 @@ document.onkeyup = function(e) {
             break;                         
         case 'Backspace':
         case 'c':
+            e.preventDefault();
             clearBtn.click();
             break;
         case 'Escape':
         case 'a':
+            e.preventDefault();
             allClearBtn.click();
             break;
         case '.':
