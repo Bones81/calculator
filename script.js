@@ -109,21 +109,13 @@ function pressOperator(e) {
     } else if (operator !== undefined && !operationComplete && !operand2Begun) {
     //what happens when you press an operator immediately after pressing an operator (hitting plus twice or hitting plus when you meant minus)
         operator = e.target.textContent;
-    } else if (operator !== undefined && !operationComplete && !operand1Set 
-        && operand2Begun) {
-      
-        operand1 = disp.textContent;
-        operand1Set = true;
-        operator = e.target.textContent;
-        operand2Begun = false;
-        operand2Set = false;
-
     } else if (operator !== undefined && !operationComplete && operand1Set 
         && operand2Begun) {
-        //what happens when you have typed in a number, an operator, and another number then press another operator. Chaining of operations.  
+    //what happens when you have typed in a number, an operator, and another number then press another operator. Chaining of operations.  
             operand2 = disp.textContent;
             operand2Set = true;
             operate(operand1, operand2);
+            operator = e.target.textContent;
             operand2Begun = false;
             operand2Set = false;
     } else if (operator !== undefined && operationComplete) {
@@ -132,12 +124,16 @@ function pressOperator(e) {
         operator = e.target.textContent;
         operand2Begun = false;
         operand2Set = false;
-    } else if (operationComplete) {
-        operationComplete = false;
+    } else if (operator !== undefined && !operationComplete && !operand1Set 
+        && operand2Begun) {
+    //what happens when you press an operator after pressing (equals followed by a number; e.g. 9,+,6,=,2,THIS)  
+        operand1 = disp.textContent;
+        operand1Set = true;
+        operator = e.target.textContent;
         operand2Begun = false;
         operand2Set = false;
-        operator = e.target.textContent;
-    } else {
+
+    }  else {
         console.log('THIS SCENARIO NEEDS ATTENTION');
     }
 }
@@ -208,16 +204,21 @@ function completeOperation(e) {
 
 polarityBtn.addEventListener('click', revPolarity);
 function revPolarity(e) {
+    if (operationComplete) {
+        operationComplete = false;
+        operand1Set = false;
+    }
     if (disp.textContent.indexOf('e') !== -1) {
         disp.textContent = Number(0 - disp.textContent).toExponential();
     } else {
         disp.textContent = 0 - disp.textContent;        
     }
     //Change operand1 or operand2 to be the modified disp.textContent, depending on which one was changed by reversing polarity
-    if (operand1Set) {
-        operand2 = disp.textContent;
+    if (operand1Set && !operand2Begun) {
+        disp.textContent = '-';
+        operand2Begun = true;
         operand2Set = false;        
-    }
+    } 
 }
 
 decimalBtn.addEventListener('click', placeDecimal);
@@ -251,7 +252,6 @@ function simpleClear() {
     if (operand2Begun) {
         operand2Begun = false;
     }
-    //operand1 = 0;
 }
 
 allClearBtn.addEventListener('click', fullClear);
@@ -270,8 +270,9 @@ document.onkeyup = function(e) {
     console.log(e);
     switch(e.key) {
         case 'Enter':
+            equals.click();
+            break;
         case '=':  
-            e.preventDefault();
             equals.click();
             break;
         case '+':
@@ -317,13 +318,15 @@ document.onkeyup = function(e) {
             btn9.click();
             break;                         
         case 'Backspace':
+            clearBtn.click();
+            break;
         case 'c':
-            e.preventDefault();
             clearBtn.click();
             break;
         case 'Escape':
+            allClearBtn.click();
+            break;
         case 'a':
-            e.preventDefault();
             allClearBtn.click();
             break;
         case '.':
