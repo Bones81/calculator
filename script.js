@@ -1,4 +1,4 @@
-//grab all buttons and display and store in variables
+//grab all buttons and display and store in variables. Initialize variables.
 const equals = document.getElementById('equals');
 const addBtn = document.getElementById('add');
 const subtractBtn = document.getElementById('subtract');
@@ -21,8 +21,6 @@ const btn9 = document.getElementById('9');
 const disp = document.getElementById('display');
 disp.textContent = '0';
 const maxDispLength = 14;
-
-// Initialize operands and operator
 let operand1;
 let operand2;
 let operator;
@@ -48,9 +46,7 @@ function divide(a,b) {
         return a/b; 
     }
 }
-//limit length of result with rounding/length restriction 
 
-//Digit button responses
 const digits = document.querySelectorAll('.digit-btn');
 const digitsArray = Array.from(digits);
 
@@ -88,13 +84,6 @@ function pressDigit(e) {
             return;    
     }
 }
-
-//how to ensure disp length is not exceeded
-// function fixLength(num) {
-    //     const fixed = Number(num.toString().slice(0,maxDispLength));
-    //     return fixed;
-    // }
-    //operator/equals button responses
 const operators = document.querySelectorAll('.operator');
 const opsArray = Array.from(operators);
     for (i=0; i<opsArray.length; i++) {
@@ -132,12 +121,10 @@ function pressOperator(e) {
         operator = e.target.textContent;
         operand2Begun = false;
         operand2Set = false;
-
     }  else {
         console.log('THIS SCENARIO NEEDS ATTENTION');
     }
 }
-
 equals.addEventListener('click', operate);
 
 function operate(e) {
@@ -188,7 +175,6 @@ function operate(e) {
         res = res.toExponential(8);
     }
     if (res.toString().length > maxDispLength && res >= (1*(10**maxDispLength)-1) || res <= -(1*10**(maxDispLength - 1)+1)) {
-        //convert res to sci notation
         res = res.toExponential(8);
     }
     disp.textContent = res;
@@ -213,7 +199,6 @@ function revPolarity(e) {
     } else {
         disp.textContent = 0 - disp.textContent;        
     }
-    //Change operand1 or operand2 to be the modified disp.textContent, depending on which one was changed by reversing polarity
     if (operand1Set && !operand2Begun) {
         disp.textContent = '-';
         operand2Begun = true;
@@ -266,13 +251,12 @@ function fullClear() {
     operationComplete = false;
 }
 
-document.onkeyup = function(e) {
+document.onkeydown = function(e) {
     console.log(e);
     switch(e.key) {
         case 'Enter':
-            equals.click();
-            break;
-        case '=':  
+        case '=':
+            e.preventDefault(); 
             equals.click();
             break;
         case '+':
@@ -318,14 +302,10 @@ document.onkeyup = function(e) {
             btn9.click();
             break;                         
         case 'Backspace':
-            clearBtn.click();
-            break;
         case 'c':
             clearBtn.click();
             break;
         case 'Escape':
-            allClearBtn.click();
-            break;
         case 'a':
             allClearBtn.click();
             break;
